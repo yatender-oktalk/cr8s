@@ -7,11 +7,11 @@ use crate::schema::*;
 pub struct RustaceanRepository;
 
 impl RustaceanRepository {
-    async fn find_one(c: &mut AsyncPgConnection, id: i32) -> QueryResult<Rustacean> {
+    pub async fn find_one(c: &mut AsyncPgConnection, id: i32) -> QueryResult<Rustacean> {
         rustaceans::table.find(id).get_result(c).await
     }
 
-    async fn find_many(
+    pub async fn find_many(
         c: &mut AsyncPgConnection,
         limit: i64,
         offset: i64,
@@ -19,7 +19,7 @@ impl RustaceanRepository {
         rustaceans::table.limit(limit).offset(offset).load(c).await
     }
 
-    async fn create(
+    pub async fn create(
         c: &mut AsyncPgConnection,
         new_rustaceans: NewRustacean,
     ) -> QueryResult<Rustacean> {
@@ -29,7 +29,7 @@ impl RustaceanRepository {
             .await
     }
 
-    async fn update(
+    pub async fn update(
         conn: &mut AsyncPgConnection,
         id: i32,
         rustacean: Rustacean,
