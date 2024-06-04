@@ -1,13 +1,12 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use crate::schema::*;
-use diesel::sql_types::Text;
 
-#[derive(Debug, Queryable)]
+#[derive(Queryable)]
 pub struct Rustacean {
     pub id: i32,
     pub name: String,
-    pub age: u8,
+    pub age: i32,
     pub email: String,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
