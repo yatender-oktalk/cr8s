@@ -50,14 +50,15 @@ impl RustaceanRepository {
             .await
     }
 }
+
 pub struct CrateRepository;
 
 impl CrateRepository {
-    async fn find_one(conn: &mut AsyncPgConnection, crate_id: i32) -> QueryResult<Crate> {
+    pub async fn find_one(conn: &mut AsyncPgConnection, crate_id: i32) -> QueryResult<Crate> {
         crates::table.find(crate_id).get_result(conn).await
     }
 
-    async fn find_many(
+    pub async fn find_many(
         conn: &mut AsyncPgConnection,
         limit: i64,
         offset: i64,
@@ -65,14 +66,14 @@ impl CrateRepository {
         crates::table.limit(limit).offset(offset).load(conn).await
     }
 
-    async fn create(c: &mut AsyncPgConnection, new_crate: NewCrate) -> QueryResult<Crate> {
+    pub async fn create(c: &mut AsyncPgConnection, new_crate: NewCrate) -> QueryResult<Crate> {
         diesel::insert_into(crates::table)
             .values(new_crate)
             .get_result(c)
             .await
     }
 
-    async fn update(c: &mut AsyncPgConnection, id: i32, a_crate: Crate) -> QueryResult<Crate> {
+    pub async fn update(c: &mut AsyncPgConnection, id: i32, a_crate: Crate) -> QueryResult<Crate> {
         diesel::update(crates::table.find(id))
             .set((
                 crates::name.eq(a_crate.name),
@@ -84,7 +85,7 @@ impl CrateRepository {
             .await
     }
 
-    async fn delete(c: &mut AsyncPgConnection, id: i32) -> QueryResult<usize> {
+    pub async fn delete(c: &mut AsyncPgConnection, id: i32) -> QueryResult<usize> {
         diesel::delete(crates::table.find(id)).execute(c).await
     }
 }
