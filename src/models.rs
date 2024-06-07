@@ -2,7 +2,7 @@ use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use crate::schema::*;
 
-#[derive(Queryable)]
+#[derive(Queryable, AsChangeset, serde::Serialize)]
 pub struct Rustacean {
     pub id: i32,
     pub name: String,

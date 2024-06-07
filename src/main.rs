@@ -1,29 +1,20 @@
-use repository::RustaceanRepository;
-use rocket::http::hyper::server::conn::Connection;
-use rocket_db_pools::{Connection, Database};
+use rocket_db_pools::Database;
 
 mod models;
 mod repository;
 mod schema;
+mod rocket_routes;
 
 #[rocket::main]
 async fn main() {
     let _ = rocket::build()
-        .mount("/", rocket::routes![get_rust_version])
+        .mount("/", rocket::routes![rocket_routes::rustaceans::get_rust_version, rocket_routes::rustaceans::get_db_conn])
         .attach(DbConn::init())
         .launch()
         .await;
 }
 
-#[rocket::get("/version")]
-fn get_rust_version() -> String {
-    "0.1.0".to_string()
-}
 
-#[rocket::get("/db")]
-async fn get_db_conn(db: Connection<DbConn>()) {
-    RustaceanRepository::find_many(&mut db, 5, 0).await
-}
 
 #[derive(Database)]
 #[database("postgres")]
