@@ -1,20 +1,22 @@
 use rocket_db_pools::Database;
+use rocket_routes::rustaceans;
 
 mod models;
 mod repository;
-mod schema;
 mod rocket_routes;
+mod schema;
 
 #[rocket::main]
 async fn main() {
     let _ = rocket::build()
-        .mount("/", rocket::routes![rocket_routes::rustaceans::get_rust_version, rocket_routes::rustaceans::get_db_conn])
+        .mount(
+            "/",
+            rocket::routes![rustaceans::get_rust_version, rustaceans::get_db_conn],
+        )
         .attach(DbConn::init())
         .launch()
         .await;
 }
-
-
 
 #[derive(Database)]
 #[database("postgres")]
