@@ -44,7 +44,7 @@ impl RustaceanRepository {
             .await
     }
 
-    async fn delete(conn: &mut AsyncPgConnection, id: i32) -> QueryResult<usize> {
+    pub async fn delete(conn: &mut AsyncPgConnection, id: i32) -> QueryResult<usize> {
         diesel::delete(rustaceans::table.find(id))
             .execute(conn)
             .await

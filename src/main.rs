@@ -11,7 +11,15 @@ async fn main() {
     let _ = rocket::build()
         .mount(
             "/",
-            rocket::routes![rustaceans::get_rust_version, rustaceans::get_db_conn],
+            rocket::routes![
+                rustaceans::get_rust_version,
+                rustaceans::get_db_conn,
+                rustaceans::get_rustacean,
+                rustaceans::get_rustaceans,
+                rustaceans::create_rustacean,
+                rustaceans::update_rustacean,
+                rustaceans::delete_rustacean,
+            ],
         )
         .attach(DbConn::init())
         .launch()
