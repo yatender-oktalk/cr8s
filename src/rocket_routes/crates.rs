@@ -11,22 +11,9 @@ use crate::repository::CrateRepository;
 
 use crate::DbConn;
 
-#[rocket::get("/version")]
-pub async fn get_rust_version() -> String {
-    "0.1.0".to_string()
-}
-
-#[rocket::get("/db")]
-pub async fn get_db_conn(mut db: Connection<DbConn>) -> Result<Value, Custom<Value>> {
-    CrateRepository::find_many(&mut db, 5, 0)
-        .await
-        .map(|rustacean| json!(rustacean))
-        .map_err(|_| Custom(Status::InternalServerError, json!("Error")))
-}
-
 // We will fetch the limit and offset from the query params from the request.
-#[rocket::get("/rustaceans?<limit>&<offset>")]
-pub async fn get_rustaceans(
+#[rocket::get("/crates?<limit>&<offset>")]
+pub async fn get_crates(
     mut db: Connection<DbConn>,
     limit: Option<i64>,
     offset: Option<i64>,
@@ -35,34 +22,34 @@ pub async fn get_rustaceans(
     let limit = limit.unwrap_or(10);
     CrateRepository::find_many(&mut db, limit, offset)
         .await
-        .map(|rustaceans| json!(rustaceans))
-        .map_err(|_| Custom(Status::NotFound, json!("Rustacean not found")))
+        .map(|crates| json!(crates))
+        .map_err(|_| Custom(Status::NotFound, json!("No crates available")))
 }
 
-#[rocket::get("/rustaceans/<id>")]
-pub async fn get_rustacean(mut db: Connection<DbConn>, id: i32) -> Result<Value, Custom<Value>> {
+#[rocket::get("/crates/<id>")]
+pub async fn get_crate(mut db: Connection<DbConn>, id: i32) -> Result<Value, Custom<Value>> {
     CrateRepository::find_one(&mut db, id)
         .await
-        .map(|rustacean| json!(rustacean))
-        .map_err(|_| Custom(Status::NotFound, json!("Rustacean not found")))
+        .map(|crates| json!(crates))
+        .map_err(|_| Custom(Status::NotFound, json!("Crate not found")))
 }
 
-#[rocket::post("/rustaceans", format = "json", data = "<new_rustacean>")]
-pub async fn create_rustacean(
+#[rocket::post("/crates", format = "json", data = "<new_crate>")]
+pub async fn create_crate(
     mut db: Connection<DbConn>,
-    new_rustacean: Json<NewRustacean>,
+    new_crate: Json<NewCrate>,
 ) -> Result<Custom<Value>, Custom<Value>> {
-    CrateRepository::create(&mut db, new_rustacean.into_inner())
+    CrateRepository::create(&mut db, new_crate.into_inner())
         .await
-        .map(|rustacean| Custom(Status::Created, json!(rustacean)))
+        .map(|crate_data| Custom(Status::Created, json!(crate_data)))
         .map_err(|_| Custom(Status::InternalServerError, json!("Error")))
 }
 
-#[rocket::put("/rustaceans/<id>", format = "json", data = "<rustacian>")]
-pub async fn update_rustacean(
+#[rocket::put("/crates/<id>", format = "json", data = "<rustacian>")]
+pub async fn update_crate(
     mut db: Connection<DbConn>,
     id: i32,
-    rustacian: Json<Rustacean>,
+    rustacian: Json<Crate>,
 ) -> Result<Custom<Value>, Custom<Value>> {
     CrateRepository::update(&mut db, id, rustacian.into_inner())
         .await
@@ -70,8 +57,8 @@ pub async fn update_rustacean(
         .map_err(|_| Custom(Status::InternalServerError, json!("Error")))
 }
 
-#[rocket::delete("/rustaceans/<id>")]
-pub async fn delete_rustacean(
+#[rocket::delete("/crates/<id>")]
+pub async fn delete_crate(
     mut db: Connection<DbConn>,
     id: i32,
 ) -> Result<Custom<Value>, Custom<Value>> {

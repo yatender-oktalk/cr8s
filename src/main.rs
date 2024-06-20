@@ -1,4 +1,5 @@
 use rocket_db_pools::Database;
+use rocket_routes::crates;
 use rocket_routes::rustaceans;
 
 mod models;
@@ -19,6 +20,11 @@ async fn main() {
                 rustaceans::create_rustacean,
                 rustaceans::update_rustacean,
                 rustaceans::delete_rustacean,
+                crates::get_crate,
+                crates::get_crates,
+                crates::create_crate,
+                crates::update_crate,
+                crates::delete_crate,
             ],
         )
         .attach(DbConn::init())
