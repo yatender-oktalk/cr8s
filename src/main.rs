@@ -1,4 +1,3 @@
-use rocket_db_pools::Database;
 use rocket_routes::crates;
 use rocket_routes::rustaceans;
 
@@ -6,6 +5,8 @@ mod models;
 mod repository;
 mod rocket_routes;
 mod schema;
+
+use rocket_db_pools::Database;
 
 #[rocket::main]
 async fn main() {
@@ -27,11 +28,7 @@ async fn main() {
                 crates::delete_crate,
             ],
         )
-        .attach(DbConn::init())
+        .attach(rocket_routes::DbConn::init())
         .launch()
         .await;
 }
-
-#[derive(Database)]
-#[database("postgres")]
-struct DbConn(rocket_db_pools::diesel::PgPool);

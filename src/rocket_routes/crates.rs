@@ -9,7 +9,7 @@ use crate::models::Crate;
 use crate::models::NewCrate;
 use crate::repository::CrateRepository;
 
-use crate::DbConn;
+use super::DbConn;
 
 // We will fetch the limit and offset from the query params from the request.
 #[rocket::get("/crates?<limit>&<offset>")]

@@ -8,7 +8,8 @@ use rocket_db_pools::Connection;
 use crate::models::NewRustacean;
 use crate::models::Rustacean;
 use crate::repository::RustaceanRepository;
-use crate::DbConn;
+
+use super::DbConn;
 
 #[rocket::get("/version")]
 pub async fn get_rust_version() -> String {
